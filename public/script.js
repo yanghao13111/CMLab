@@ -1,74 +1,72 @@
-// Function to make a request to the server and handle the response
-async function makeRequest(url, method, data) {
-    const response = await fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-    return response.json();  // Assuming server responds with JSON
+// 建立WebSocket連接
+const ws = new WebSocket('ws://localhost:8081');
+
+ws.onopen = function() {
+    console.log('Connected to the WebSocket server');
+};
+
+ws.onmessage = function(event) {
+    const [action, result] = event.data.split('|');
+    switch(action) {
+        case 'LOGIN_RESPONSE':
+            if (result === 'SUCCESS') {
+                window.location.href = '/profile.html';
+            } else {
+                alert('登錄失敗，請檢查您的帳號或密碼。');
+            }
+            break;
+        case 'REGISTER_RESPONSE':
+            if (result === 'SUCCESS') {
+                alert('註冊成功，請登錄。');
+                window.location.href = '/';
+            } else {
+                alert('註冊失敗，用戶名可能已存在。');
+            }
+            break;
+    }
+};
+
+function login(username, password) {
+    ws.send(`LOGIN|${username}|${password}`);
+}
+
+function register(username, password) {
+    ws.send(`REGISTER|${username}|${password}`);
+}
+
+function logout() {
+    ws.send('LOGOUT');
+    localStorage.removeItem('username'); // 假設您在localStorage中儲存了用戶名
+    window.location.href = '/';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
+    const logoutButton = document.getElementById('logout');
 
-    // Handle the login form submission
     if (loginForm) {
-        loginForm.addEventListener('submit', async function(e) {
+        loginForm.onsubmit = function(e) {
             e.preventDefault();
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
-            try {
-                const data = await makeRequest('/login', 'POST', { username, password });
-                if (data.success) {
-                    localStorage.setItem('username', username); // Store username
-                    window.location.href = '/profile.html';  // Redirect to profile
-                } else {
-                    alert(data.message);
-                }
-            } catch (error) {
-                console.error('Login failed', error);
-            }
-        });
+            login(username, password);
+        };
     }
 
-    // Handle the registration form submission
     if (registerForm) {
-        registerForm.addEventListener('submit', async function(e) {
+        registerForm.onsubmit = function(e) {
             e.preventDefault();
             const username = document.getElementById('register-username').value;
             const password = document.getElementById('register-password').value;
-            try {
-                const data = await makeRequest('/register', 'POST', { username, password });
-                if (data.success) {
-                    alert('Registration successful! Please log in.');
-                    window.location.href = '/';  // Redirect to login
-                } else {
-                    alert(data.message);
-                }
-            } catch (error) {
-                console.error('Registration failed', error);
-            }
-        });
+            register(username, password);
+        };
     }
 
-    // Handle logout
-    const logoutButton = document.getElementById('logout');
     if (logoutButton) {
-        logoutButton.addEventListener('click', async function() {
-            try {
-                const data = await makeRequest('/logout', 'POST', {});
-                if (data.success) {
-                    localStorage.removeItem('username');  // Clear username
-                    window.location.href = '/';  // Redirect to login
-                } else {
-                    alert(data.message);
-                }
-            } catch (error) {
-                console.error('Logout failed', error);
-            }
-        });
+        logoutButton.onclick = function(e) {
+            e.preventDefault();
+            logout();
+        };
     }
 });
