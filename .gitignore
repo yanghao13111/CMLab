@@ -1,4 +1,6 @@
 **/client.dSYM/
 **/server.dSYM/
 
-.vscode/
+
+**/vscode/
+**/node_modules/
