@@ -1,0 +1,17 @@
+#onlineUsers button {
+    margin: 5px;
+    padding: 5px;
+}
+video {
+    width: 45%; /* 调整视频大小和布局 */
+    border: 1px solid black;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
