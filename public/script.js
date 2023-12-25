@@ -1,4 +1,4 @@
-// 连接到Socket.IO服务器
+// 連接到Socket.IO server
 const socket = io();
 
 socket.on('connect', () => {
@@ -20,7 +20,7 @@ function login() {
       if (response.ok) return response.json();
       throw new Error('Login failed.');
     }).then(data => {
-      localStorage.setItem('username', data.username); // 存储用户名
+      localStorage.setItem('username', data.username); 
       window.location.href = '/profile.html';
     }).catch(error => {
       alert(error);
@@ -59,8 +59,7 @@ function login() {
     });
   }
 
-
-// 获取留言并显示（使用Socket.IO）
+// 獲取留言並顯示（使用Socket.IO）
 function loadMessages() {
   socket.on('loadMessages', (messages) => {
     const messagesDiv = document.getElementById('messages');
@@ -74,31 +73,30 @@ function loadMessages() {
   });
 }
 
-// 发布留言（使用Socket.IO）
+// 發布留言（使用Socket.IO）
 function postMessage() {
   const subject = document.getElementById('subject').value;
   const content = document.getElementById('content').value;
-  console.log('Sending message:', { subject, content});
-  // 发送留言到服务器
-  socket.emit('postMessage', { subject, content});
-  // 监听服务器确认消息已保存
+  const author = "Anonymous"
+  socket.emit('postMessage', { subject, content, author });
+  // 監聽server確認消息已保存
   socket.on('messagePosted', () => {
-    window.location.href = '/messageboard.html'; // 跳转到留言板页面
+    window.location.href = '/messageboard.html'; // 跳轉到留言板頁面
   });
 }
 
-// 监听来自服务器的新留言
+// 監聽來自server的新留言
 socket.on('newMessage', (msg) => {
-  // 将新留言添加到留言板
+  // 將新留言添加到留言板
   addMessageToBoard(msg);
 });
 
-// 获取留言并显示
+// 獲取留言並顯示（使用Socket.IO）
 function loadMessages() {
   // 请求服务器获取所有留言
   socket.emit('requestMessages');
 
-  // 接收服务器发送的所有留言
+  // 接收server發送的所有留言
   socket.on('loadMessages', (messages) => {
     const messagesDiv = document.getElementById('messages');
     messagesDiv.innerHTML = messages.map(msg => 
@@ -111,7 +109,7 @@ function loadMessages() {
   });
 }
 
-// 页面加载时获取留言
+// 頁面載入時獲取留言
 if (window.location.pathname === '/messageboard.html') {
     loadMessages();
 }
@@ -125,7 +123,7 @@ let peerConnection = null;
 const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
 
 socket.on('online-users', (users) => {
-  // 更新UI以显示在线用户
+  // 更新UI以顯示在線用戶
   const usersList = document.getElementById('onlineUsers');
   usersList.innerHTML = '';
   users.forEach(user => {
@@ -138,7 +136,7 @@ socket.on('online-users', (users) => {
 function initiateCall(otherUsername) {
   if (otherUsername) {
       console.log(`Initiating call with ${otherUsername}`);
-      // 发送呼叫请求给服务器，服务器需要转发给特定的用户
+      // 發送呼叫請求給server，server需要轉發給特定的用戶
       socket.emit('initiate-call', { to: otherUsername });
   }
 }
@@ -156,8 +154,8 @@ function toggleMicrophone() {
     audioTrack.enabled = !audioTrack.enabled;
   }
 }
-
-// 获取本地视频和音频
+ 
+// 獲取本地視訊和音訊
 function startVideo() {
   navigator.mediaDevices.getUserMedia({audio: true, video: true})
     .then(stream => {
@@ -169,18 +167,18 @@ function startVideo() {
     });
 }
 
-// 创建WebRTC连接
+// 創建WebRTC連接
 function createPeerConnection() {
   peerConnection = new RTCPeerConnection(configuration);
 
-  // 当找到ICE候选时发送给远端
+  // 當找到ICE candidate時發送給遠端
   peerConnection.onicecandidate = ({candidate}) => {
     if(candidate) {
       socket.emit('new-ice-candidate', {candidate});
     }
   };
 
-  // 当远端流到达时，将其设置到远端视频对象中
+  // 當遠端流到達時，將其設置到遠端視訊對象中
   peerConnection.ontrack = (event) => {
     if (!remoteStream) {
       remoteStream = new MediaStream();
@@ -189,7 +187,6 @@ function createPeerConnection() {
     remoteStream.addTrack(event.track);
   };
 
-  // 添加本地流到连接
   localStream.getTracks().forEach(track => {
     peerConnection.addTrack(track, localStream);
   });
@@ -218,19 +215,19 @@ function handleOffer(offer) {
     .catch(error => console.error('Error handling offer: ', error));
 }
 
-// 处理远端的回应
+//  處理遠端的回應
 function handleAnswer(answer) {
   peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
     .catch(error => console.error('Error setting remote description: ', error));
 }
 
-// 处理新的ICE候选
+// 處理新的ICE candidate
 function handleNewICECandidate(candidate) {
   peerConnection.addIceCandidate(candidate)
     .catch(error => console.error('Error adding received ice candidate', error));
 }
 
-// 退出视频通话
+// 退出視訊通話
 function hangupVideo() {
   if (peerConnection) {
     peerConnection.close();
@@ -246,7 +243,7 @@ function hangupVideo() {
   window.location.href = '/profile.html'; // 跳转回个人主页
 }
 
-// 监听Socket.IO事件
+// 監聽Socket.IO events
 socket.on('video-offer', data => {
   handleOffer(data.offer);
 });
@@ -261,17 +258,15 @@ socket.on('new-ice-candidate', data => {
 
 socket.on('user-disconnected', () => {
   console.log('The other user has disconnected.');
-  hangupVideo();  // 调用挂断视频的函数
+  hangupVideo();  
 });
 
 socket.on('incoming-call', (data) => {
   if (confirm(`Incoming call from ${data.from}, accept?`)) {
-      // 接受呼叫逻辑
       call();
   }
 });
 
 socket.on('call-error', (data) => {
-  alert(data.message); // 显示错误信息，例如对方不在线
+  alert(data.message);
 });
-

@@ -14,17 +14,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
 
-// 连接到MongoDB
+// 連接到MongoDB
 mongoose.connect('mongodb://localhost:27017/appDatabase');
 
-// 定义用户模型
+// 定義用戶模型
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
 });
 const User = mongoose.model('User', userSchema);
 
-// 定义留言模型
+// 定義留言模型
 const messageSchema = new mongoose.Schema({
   subject: String,
   content: String,
@@ -48,7 +48,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// 用户登录
+// 用户登入
 app.post('/login', async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
@@ -59,6 +59,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
 // 用户登出
 app.post('/logout', (req, res) => {
   res.clearCookie('username');
@@ -68,43 +69,42 @@ app.post('/logout', (req, res) => {
 // Socket.IO通信
 io.on('connection', (socket) => {
 
-  // 当用户登录时
+  // 當用戶登入時
   socket.on('user-login', (username) => {
       onlineUsers[socket.id] = username;
       io.emit('online-users', Object.values(onlineUsers));
   });
 
-  // 当用户断开连接时
+  // 當用戶斷開連接時
   socket.on('disconnect', () => {
       delete onlineUsers[socket.id];
       io.emit('online-users', Object.values(onlineUsers));
   });
 
 
-  // 发布留言
+  // 發布留言
   socket.on('postMessage', async (msg) => {
     console.log('Received message:', msg);
     console.log('A user connected with username:', socket.handshake.query.username);
     try {
-      const usernameFromCookie = socket.handshake.query.username;
       const newMessage = new Message({
         subject: msg.subject,
         content: msg.content,
-        author: usernameFromCookie || 'Anonymous',
+        author: msg.author,
       });
       const savedMessage = await newMessage.save();
-      io.emit('newMessage', savedMessage); // Broadcast the new message to all clients
-      socket.emit('messagePosted'); // 告诉发送消息的客户端消息已发布
+      io.emit('newMessage', savedMessage); 
+      socket.emit('messagePosted'); // 告诉发送消息的客户端消息已发布 告訴發送消息的客戶端消息已發布
     } catch (error) {
       console.error('Error saving message:', error);
     }
   });
 
-  // 监听来自客户端的请求消息事件
+  // 監聽來自客戶端的請求消息event
   socket.on('requestMessages', async () => {
     try {
       const messages = await Message.find().sort({ createdAt: -1 });
-      socket.emit('loadMessages', messages);  // 发送所有留言给请求的客户端
+      socket.emit('loadMessages', messages); 
     } catch (error) {
       console.error('Error retrieving messages:', error);
     }
@@ -124,7 +124,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 处理视频通话信令
+
   socket.on('video-offer', (data) => {
     socket.broadcast.emit('video-offer', { offer: data.offer });
   });
@@ -143,3 +143,4 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+

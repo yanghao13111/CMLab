@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>网络视频</title>
+    <title>視訊聊天</title>
     <style>
         /* 简单的样式，您可以根据需要进行调整 */
         #onlineUsers button {
@@ -16,13 +16,13 @@
     <link rel="stylesheet" type="text/css" href="videoChat.css">
 </head>
 <body>
-    <h2>视频通话</h2>
+    <h2>視訊通話</h2>
     <video id="localVideo" autoplay muted></video>
     <video id="remoteVideo" autoplay></video>
     <br>
-    <button onclick="startVideo()">打开摄像头</button>
-    <button onclick="toggleCamera()">切换摄像头</button>
-    <button onclick="toggleMicrophone()">切换麦克风</button>
+    <button onclick="startVideo()">啟動鏡頭</button>
+    <button onclick="toggleCamera()">切换鏡頭</button>
+    <button onclick="toggleMicrophone()">切换麥克風</button>
     <button id="callButton" onclick="call()">加入</button>
     <button id="hangupButton" onclick="hangupVideo()">退出</button>
 
