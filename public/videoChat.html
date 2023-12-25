@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>网络视频</title>
+    <style>
+        /* 简单的样式，您可以根据需要进行调整 */
+        #onlineUsers button {
+            margin: 5px;
+            padding: 5px;
+        }
+        video {
+            width: 45%; /* 调整视频大小和布局 */
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h2>视频通话</h2>
+    <video id="localVideo" autoplay muted></video>
+    <video id="remoteVideo" autoplay></video>
+    <br>
+    <button onclick="startVideo()">打开摄像头</button>
+    <button onclick="toggleCamera()">切换摄像头</button>
+    <button onclick="toggleMicrophone()">切换麦克风</button>
+    <button id="callButton" onclick="call()">加入</button>
+    <button id="hangupButton" onclick="hangupVideo()">退出</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

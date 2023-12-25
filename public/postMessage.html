@@ -1,27 +1,18 @@
-<!-- postMessage.html -->
-
+<!-- postmessage.html -->
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>發布留言</title>
+    <meta charset="UTF-8">
+    <title>發布留言</title>
 </head>
 <body>
-<h1>發布留言</h1>
-<form id="postMessageForm">
-    <label for="username">用户名:</label>
-    <input type="text" id="username" name="username" required><br>
-
-    <label for="subject">主旨:</label>
-    <input type="text" id="subject" name="subject" required><br>
-
-    <label for="messageContent">正文:</label>
-    <textarea id="messageContent" name="messageContent" required></textarea><br>
-
-    <button type="submit">發布</button>
-    <button type="button" id="cancelPost">取消</button>
-</form>
-
-<script src="script.js"></script>
+    <h1>發布留言</h1>
+    <form id="postForm">
+        主題：<input type="text" id="subject"><br>
+        內容：<textarea id="content"></textarea><br>
+        <button type="button" onclick="postMessage()">發布</button>
+    </form>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

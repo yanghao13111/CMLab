@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile</title>
-<link rel="stylesheet" href="./styles.css">
+  <meta charset="UTF-8">
+  <title>Profile</title>
 </head>
 <body>
-<div class="profile-container">
-    <h1>Welcome, <span id="username-display"></span>!</h1>
-    <button id="navigateToMessageBoard">留言板</button>
-    <button id="logout">Logout</button>
-</div>
-<script src="./script.js"></script>
+  <h2>Welcome, <span id="username"></span></h2>
+  <button onclick="location.href='/messageboard.html'">留言板</button>
+  <button onclick="location.href='/videochat.html'">視訊聊天</button>
+  <button onclick="logout()">Logout</button>
+
+  <script src="script.js"></script>
 </body>
 </html>

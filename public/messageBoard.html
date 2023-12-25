@@ -1,17 +1,30 @@
-<!-- messageBoard.html -->
-
+<!-- messageboard.html -->
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>留言板</title>
+    <meta charset="UTF-8">
+    <title>留言板</title>
+    <style>
+        .message-container {
+            border: 1px solid #000;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .message-header {
+            font-weight: bold;
+        }
+        .message-footer {
+            text-align: right;
+            font-size: 0.8em;
+        }
+    </style>
 </head>
 <body>
-<h1>留言板</h1>
-<div id="messages"></div>
-<button onclick="navigateToPostMessage()">發布</button>
-<button onclick="navigateToHomePage()">回到主頁</button>
-
-<script src="script.js"></script>
+    <h1>留言板</h1>
+    <div id="messages"></div>
+    <button onclick="location.href='/postmessage.html'">發布</button>
+    <button onclick="location.href='/profile.html'">回到主頁</button>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
