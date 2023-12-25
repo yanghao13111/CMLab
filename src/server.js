@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const http = require('http');
 const socketIo = require('socket.io');
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
 
 const app = express();
 const server = http.createServer(app);
