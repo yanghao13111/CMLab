@@ -1,36 +1,38 @@
-# Project phase1 運作說明
+# Computer Network Project 運作說明
 
-此socket傳文字功能由server和client兩部分組成。使用gcc進行編譯後，透過這兩個application建立一個簡單的聊天連接。
+## 專案描述
+專注於實時通訊、用戶身份驗證和多媒體交互，並利用 Node.js、Socket.IO、WebRTC 和 MongoDB 等技術，創建了一個動態互動的網絡應用。
 
+網址：https://drive.google.com/file/d/1HjJ4bY1-348IfmDWgrv50fC0itL32U5h/view?usp=share_link
 
-## 使用方式
+## 實現功能
+### basic
+- **用戶身份驗證**：使用 bcrypt 進行密碼加密，通過自訂的 cookie 機制進行安全的註冊和登入流程。
+- **即時留言板**：採用 Socket.IO 實現，允許用戶即時發布和查看消息。
+- **音頻和視頻流媒體**：利用 WebRTC 實現實時音頻和視頻通信功能。
+### bonus
+- **multithread性能提升**：通過多線程實現提高服務器性能，有效利用服務器資源。
+- **persistent HTTP 連接**：通過實現持久化 HTTP 連接，提高網絡效率。
+- **自簽 SSL 證書**：使用 OpenSSL 生成自簽名 SSL 證書，確保數據傳輸的安全。
 
-1. **編譯**:
-    ```bash
-    gcc server.c -o server
-    gcc client.c -o client
-    ```
+## 使用技術
+- 後端：Node.js、Express、Socket.IO、MongoDB、Mongoose
+- 前端：HTML、CSS、JavaScript
+- 安全性：bcrypt、SSL/TLS（OpenSSL）: 54.253.101.2
+- 實時通信：WebRTC、Socket.IO
 
-2. **啟動 Server**:
-    - 執行server。
-    ```bash
-    ./server
-    ```
+## 安裝與設置
+2. 安裝套件：在項目目錄下運行 `npm install`。
+3. 確保 MongoDB 正在運行且可訪問。
+4. 啟動服務器：`node src/server.js`
 
-    - 一旦啟動，server會在端口8080上監聽連接。
+## 使用方法
+- **註冊和登入**：用戶可以註冊帳號並登入以訪問應用程序。
+- **留言板**：在留言板上發布和查看即時消息。
+- **視頻和音頻通話**：與其他用戶發起和參與視頻和音頻通話。
 
-3. **啟動 Client**:
-    - 執行client。
-    ```bash
-    ./client
-    ```
-
-    - Client會嘗試連接到`127.0.0.1`的8080端口，這是server的地址(本地)和端口。
-
-4. **聊天**:
-    - 在兩方的視窗中，您可以隨時發送訊息給對方。
-    - 發送的訊息會顯示是誰傳送的，類似於Line的界面。
-
-5. **結束聊天**:
-    - 如果server或client中的任何一方輸入`exit`，連接將會中斷，且聊天將結束。
-
+## 文件結構概覽
+- `server.js`：實現 Express 和 Socket.IO 的主服務器文件。
+- `script.js`：前端 JavaScript，處理用戶互動和實時功能。
+- `/public`：靜態文件，包括 HTML、CSS 和client端script。
+- `/models`：MongoDB 的用戶和消息數據模型。
